@@ -2,8 +2,6 @@
   (:require [clojure.java.jdbc :as jdbc]))
 
 
-(defn uuid [] (str (java.util.UUID/randomUUID)))
-
 (def db-spec {:classname "org.h2.Driver" :subprotocol "h2" :subname "mem:bookstore;DB_CLOSE_DELAY=-1"})
 
 (defn init []
@@ -18,7 +16,7 @@
   (jdbc/query db-spec ["SELECT * FROM books"]))
 
 (defn insert-book [body]
-  (jdbc/insert! db-spec :books (assoc body "id" (uuid))))
+  (jdbc/insert! db-spec :books body))
 
 (defn read-book [id]
   (jdbc/query db-spec ["SELECT * FROM books where id = ?", id]))
