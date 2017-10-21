@@ -6,11 +6,12 @@
 
 (defn init []
   ;(jdbc/execute! db-spec ["DROP TABLE BOOKS"])
-  (jdbc/db-do-commands db-spec (jdbc/create-table-ddl :books
-                                                      [[:id "varchar(256)" "primary key"]
-                                                       [:author "varchar(32)"]
-                                                       [:title "varchar(64)"]
-                                                       [:year "integer"]])))
+  (jdbc/db-do-commands db-spec
+                       (jdbc/create-table-ddl :books
+                                              [[:id "varchar(256)" "primary key"]
+                                               [:author "varchar(32)"]
+                                               [:title "varchar(64)"]
+                                               [:year "integer"]])))
 
 (defn read-books []
   (jdbc/query db-spec ["SELECT * FROM books"]))

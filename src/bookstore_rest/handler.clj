@@ -3,23 +3,29 @@
             [compojure.route :as route]
             [compojure.handler :as handler]
             [ring.middleware.json :refer [wrap-json-response wrap-json-body]]
-            [bookstore-rest.db :refer :all]))
+            [bookstore-rest.db :as db]))
 
 (defn uuid [] (str (java.util.UUID/randomUUID)))
 
+(defn read-books []
+  (db/read-books))
+
+(defn delete-book [book-id]
+  (db/delete-book book-id))
+
 (defn read-book-by-id [id]
-  (let [results (read-book id)]
+  (let [results (db/read-book id)]
     (if (empty? results)
       {:status 404}
       (ring.util.response/response (first results)))))
 
 (defn insert-new-book [body]
   (let [id (uuid)]
-    (insert-book (assoc body "id" id))
-    (read-book-by-id id)))
+    (db/insert-book (assoc body "id" id))
+    (read-book-by-id id)))                                  ; TODO alternatively just location header
 
 (defn update-existing-book [id body]
-  (update-book id (assoc body "id" id))
+  (db/update-book id (assoc body "id" id))
   (read-book-by-id id))
 
 (defroutes app-routes
@@ -36,4 +42,5 @@
   (-> (handler/api app-routes)
       (wrap-json-body)
       (wrap-json-response)))
+
 
